@@ -19,6 +19,13 @@ npm install --save-dev @types/hapi__hapi
 
 ## Mongoose
 
+[Documentation](https://mongoosejs.com/docs/guide.html)
+
+Think of Schema, Model, and Document in terms of a Cookie Factory:
+• Schema = The recipe (what ingredients a cookie needs).
+• Model = The factory (produces cookies based on the recipe).
+• Document = A single cookie (made from the factory).
+
 Document vs. Lean Documents
 By default, Mongoose queries return full Mongoose documents, which come with extra functionalities and overhead. If you only need plain objects, use .lean():
 
@@ -102,3 +109,38 @@ Run MongoDB
 ```bash
 docker-compose up -d
 ```
+
+## Testing Database Connection
+
+### mongosh
+
+```
+<!-- connect to 27017, 27018, 27019 individually to see if each is working  -->
+mongosh "mongodb://localhost:27017"
+db.runCommand({ ping: 1 })
+```
+
+```
+docker exec -it mongo1 mongosh --host localhost --port 27017 --eval "rs.status()"
+```
+
+To check the status of your MongoDB replica set, run this command inside your MongoDB container
+
+```
+docker exec -it poc-invoice-system-mongo1-1 mongosh --eval "rs.status()"
+```
+
+Test connection string
+
+```
+mongosh "mongodb://127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/?replicaSet=rs0"
+```
+
+```
+docker exec -it mongo1 mongosh --eval "rs.status()"
+```
+
+sudo nano /etc/hosts
+127.0.0.1 mongo1
+127.0.0.1 mongo2
+127.0.0.1 mongo3

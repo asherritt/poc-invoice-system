@@ -1,0 +1,51 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { Logger } from './logger';
+
+dotenv.config();
+
+const logger = new Logger();
+
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/test';
+const READ_PREFERENCE = process.env.READ_PREFERENCE || 'secondaryPreferred'; // Can be 'secondaryPreferred'
+
+export class Database {
+  static async connect(): Promise<void> {
+    try {
+      await mongoose.connect(MONGO_URI, Database.getConnectionOptions());
+
+      logger.info('MongoDB Connected');
+
+      mongoose.connection.on('connected', () =>
+        logger.info('Database Connected')
+      );
+      mongoose.connection.on('error', (err) =>
+        logger.error('Database Connection Error:', err)
+      );
+      mongoose.connection.on('disconnected', () =>
+        logger.warn('Database Disconnected')
+      );
+
+      // Auto-reconnect if the DB goes down
+      process.on('SIGINT', async () => {
+        await Database.close();
+        process.exit(0);
+      });
+    } catch (error) {
+      logger.error('Database connection failed:', error);
+      process.exit(1);
+    }
+  }
+  static getConnectionOptions(): mongoose.ConnectOptions {
+    return {
+      readPreference: READ_PREFERENCE as mongoose.mongo.ReadPreferenceMode,
+    };
+  }
+
+  static async close(): Promise<void> {
+    await mongoose.connection.close();
+    logger.info('MongoDB connection closed');
+  }
+}
+
+export const dbConnection = mongoose.connection;

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export enum PayStatus {
   PAID = 'paid',
@@ -13,15 +13,16 @@ export interface IInvoice extends Document {
   status: PayStatus;
 }
 
-const InvoiceSchema: Schema = new Schema({
-  customerName: { type: String, required: true },
-  amount: { type: Number, required: true },
-  dueDate: { type: Date, required: true },
-  status: {
-    type: String,
-    enum: PayStatus,
-    default: PayStatus.UNPAID,
+export const InvoiceSchema: Schema = new Schema(
+  {
+    customerName: { type: String, required: true },
+    amount: { type: Number, required: true },
+    dueDate: { type: Date, required: true },
+    status: {
+      type: String,
+      enum: Object.values(PayStatus),
+      default: PayStatus.UNPAID,
+    },
   },
-});
-
-export const Invoice = mongoose.model<IInvoice>('Invoice', InvoiceSchema);
+  { optimisticConcurrency: true }
+);

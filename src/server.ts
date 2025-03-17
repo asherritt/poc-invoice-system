@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import invoiceRoutes from './routes/invoice.routes';
 import { Logger } from './logger';
+import { Database } from './db';
 
 dotenv.config();
 
@@ -10,18 +11,12 @@ const logger = new Logger();
 
 const init = async () => {
   const server = Hapi.server({
-    port: process.env.PORT || 3000,
+    port: process.env.HAPI_PORT || 3000,
     host: 'localhost',
   });
 
   // Connect to MongoDB
-  try {
-    await mongoose.connect(process.env.MONGO_URI as string);
-    logger.info('MongoDB connected...');
-  } catch (error) {
-    logger.error('MongoDB connection error:', error);
-    process.exit(1);
-  }
+  Database.connect();
 
   // Register routes
   server.route(invoiceRoutes);
