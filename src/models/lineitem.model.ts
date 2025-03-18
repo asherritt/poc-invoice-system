@@ -6,8 +6,8 @@ export interface ILineItem extends Document {
   price: number;
 }
 
-const LineItemSchema = new Schema<ILineItem>({
-  description: { type: String, required: true },
+export const LineItemSchema = new Schema<ILineItem>({
+  description: { type: String, required: false, default: '' },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
 });

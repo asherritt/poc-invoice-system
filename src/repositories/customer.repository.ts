@@ -63,7 +63,8 @@ export class CustomerRepository {
   }
 
   /**
-   * Add an invoice reference to a customer
+   * Add an invoice reference to a customer.
+   * Return the updated customer document.
    */
   async addInvoice(
     customerId: string,

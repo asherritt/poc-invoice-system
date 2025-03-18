@@ -6,6 +6,8 @@ dotenv.config();
 
 const logger = new Logger();
 
+mongoose.set('debug', true);
+
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/test';
 const READ_PREFERENCE = process.env.READ_PREFERENCE || 'secondaryPreferred'; // Can be 'secondaryPreferred'
 

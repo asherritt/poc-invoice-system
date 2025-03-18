@@ -1,14 +1,10 @@
 import { Schema, Document, Types, model } from 'mongoose';
-import { ILineItem } from './lineitem.model';
-
-export enum PayStatus {
-  PAID = 'paid',
-  UNPAID = 'unpaid',
-  OVERDUE = 'overdue',
-}
+import { ILineItem, LineItemSchema } from './lineitem.model';
+import { PayStatus } from '../enums'; // Assuming you store enums separately
+import { ICustomer } from './customer.model';
 
 export interface IInvoice extends Document {
-  customer: Types.ObjectId;
+  customer: Types.ObjectId | ICustomer;
   lineItems: ILineItem[];
   totalAmount: number;
   dueDate: Date;
@@ -17,8 +13,13 @@ export interface IInvoice extends Document {
 
 export const InvoiceSchema: Schema = new Schema(
   {
-    customerName: { type: String, required: true },
-    amount: { type: Number, required: true },
+    customer: {
+      type: Types.ObjectId,
+      ref: 'Customer',
+      required: true,
+    },
+    lineItems: [LineItemSchema],
+    totalAmount: { type: Number, required: true },
     dueDate: { type: Date, required: true },
     status: {
       type: String,
@@ -28,5 +29,14 @@ export const InvoiceSchema: Schema = new Schema(
   },
   { versionKey: '__v', optimisticConcurrency: true }
 );
+
+// Middleware to Auto-Calculate Total Amount
+InvoiceSchema.pre<IInvoice>('save', function (next) {
+  this.totalAmount = this.lineItems.reduce(
+    (sum: number, item: ILineItem) => sum + item.price * item.quantity,
+    0
+  );
+  next();
+});
 
 export const Invoice = model<IInvoice>('Invoice', InvoiceSchema);

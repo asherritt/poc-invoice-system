@@ -8,14 +8,6 @@ const logger = new Logger();
 
 const invoiceRoutes: ServerRoute[] = [
   {
-    method: 'GET',
-    path: '/invoices',
-    handler: async () => {
-      logger.info('Getting all invoices');
-      return await invoiceRepo.getAll();
-    },
-  },
-  {
     method: 'POST',
     path: '/invoices',
     handler: async (request) => {
