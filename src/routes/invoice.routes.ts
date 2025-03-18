@@ -32,7 +32,7 @@ const invoiceRoutes: ServerRoute[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/invoices/{id}',
     handler: async (request) => {
       logger.info('Updating invoice by id', { id: request.params.id });

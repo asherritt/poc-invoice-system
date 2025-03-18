@@ -30,20 +30,19 @@ export class InvoiceRepository {
     invoiceData: Partial<IInvoice>
   ): Promise<IInvoice | null> {
     try {
-      const updatedInvoice = await this.model.findByIdAndUpdate(
-        id,
-        invoiceData,
-        { new: true }
-      );
-      console.log('Invoice updated successfully:', updatedInvoice);
+      const invoice = await this.model.findById(id);
+      if (!invoice) return null;
+
+      Object.assign(invoice, invoiceData);
+      return await invoice.save();
     } catch (error: any) {
       if (error.name === 'VersionError') {
         console.log('Optimistic concurrency error detected. Retrying...');
-        return this.update(id, invoiceData); // Retry updating
+        return this.update(id, invoiceData);
       }
       console.error('Update failed:', error);
+      return null;
     }
-    return await this.model.findByIdAndUpdate(id, invoiceData, { new: true });
   }
 
   async delete(id: string): Promise<IInvoice | null> {

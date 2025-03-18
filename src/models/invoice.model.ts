@@ -24,5 +24,5 @@ export const InvoiceSchema: Schema = new Schema(
       default: PayStatus.UNPAID,
     },
   },
-  { optimisticConcurrency: true }
+  { versionKey: '__v', optimisticConcurrency: true }
 );
