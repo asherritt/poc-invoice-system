@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { Customer, ICustomer } from '../models/customer.model';
+import { Customer, ICustomer } from './customer.model';
 
 export class CustomerRepository {
   private model: Model<ICustomer>;

@@ -1,10 +1,10 @@
 import Hapi from '@hapi/hapi';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import invoiceRoutes from './routes/invoice.routes';
+import invoiceRoutes from './features/invoice/invoice.routes';
 import { Logger } from './logger';
 import { Database } from './db';
-import customerRoutes from './routes/customer.routes';
+import customerRoutes from './features/customer/customer.routes';
 
 dotenv.config();
 

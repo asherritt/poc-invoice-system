@@ -1,7 +1,8 @@
 import { Schema, Document, Types, model } from 'mongoose';
-import { ILineItem, LineItemSchema } from './lineitem.model';
-import { PayStatus } from '../enums'; // Assuming you store enums separately
-import { ICustomer } from './customer.model';
+import { ILineItem, LineItemSchema } from '../lineitem/lineitem.model';
+import { PayStatus } from '../../enums'; // Assuming you store enums separately
+import { ICustomer } from '../customer/customer.model';
+import { Logger } from '../../logger';
 
 export interface IInvoice extends Document {
   customer: Types.ObjectId | ICustomer;
@@ -10,6 +11,8 @@ export interface IInvoice extends Document {
   dueDate: Date;
   status: PayStatus;
 }
+
+const logger = new Logger();
 
 export const InvoiceSchema: Schema = new Schema(
   {
@@ -37,6 +40,10 @@ InvoiceSchema.pre<IInvoice>('save', function (next) {
     0
   );
   next();
+});
+
+InvoiceSchema.post<IInvoice>('save', function (doc) {
+  logger.info('Invoice saved:', doc);
 });
 
 export const Invoice = model<IInvoice>('Invoice', InvoiceSchema);

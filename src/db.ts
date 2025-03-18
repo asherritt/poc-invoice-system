@@ -8,13 +8,17 @@ const logger = new Logger();
 
 mongoose.set('debug', true);
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/test';
+const MONGO_URI = process.env.MONGO_URI || '';
 const READ_PREFERENCE = process.env.READ_PREFERENCE || 'secondaryPreferred'; // Can be 'secondaryPreferred'
+const DB_NAME = 'poc_invoice_system';
 
 export class Database {
   static async connect(): Promise<void> {
     try {
-      await mongoose.connect(MONGO_URI, Database.getConnectionOptions());
+      await mongoose.connect(
+        `${MONGO_URI}/${DB_NAME}?replicaSet=rs0`,
+        Database.getConnectionOptions()
+      );
 
       logger.info('MongoDB Connected');
 

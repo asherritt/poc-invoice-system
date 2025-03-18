@@ -1,8 +1,8 @@
 import { Model, Types } from 'mongoose';
-import { IInvoice, InvoiceSchema } from '../models/invoice.model';
-import { dbConnection } from '../db';
-import { Logger } from '../logger';
-import { Customer } from '../models/customer.model';
+import { IInvoice, InvoiceSchema } from './invoice.model';
+import { dbConnection } from '../../db';
+import { Logger } from '../../logger';
+import { Customer } from '../customer/customer.model';
 
 export class InvoiceRepository {
   private model: Model<IInvoice>;

@@ -1,6 +1,6 @@
 import { ServerRoute } from '@hapi/hapi';
-import { InvoiceRepository } from '../repositories/invoice.repository';
-import { Logger } from '../logger';
+import { InvoiceRepository } from './invoice.repository';
+import { Logger } from '../../logger';
 
 const invoiceRepo = new InvoiceRepository();
 
