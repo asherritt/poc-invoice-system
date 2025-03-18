@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import invoiceRoutes from './routes/invoice.routes';
 import { Logger } from './logger';
 import { Database } from './db';
+import customerRoutes from './routes/customer.routes';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ const init = async () => {
 
   // Register routes
   server.route(invoiceRoutes);
+  server.route(customerRoutes);
 
   await server.start();
   console.log(`Server running on ${server.info.uri}`);

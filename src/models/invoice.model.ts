@@ -1,4 +1,5 @@
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, Types, model } from 'mongoose';
+import { ILineItem } from './lineitem.model';
 
 export enum PayStatus {
   PAID = 'paid',
@@ -7,8 +8,9 @@ export enum PayStatus {
 }
 
 export interface IInvoice extends Document {
-  customerName: string;
-  amount: number;
+  customer: Types.ObjectId;
+  lineItems: ILineItem[];
+  totalAmount: number;
   dueDate: Date;
   status: PayStatus;
 }
@@ -26,3 +28,5 @@ export const InvoiceSchema: Schema = new Schema(
   },
   { versionKey: '__v', optimisticConcurrency: true }
 );
+
+export const Invoice = model<IInvoice>('Invoice', InvoiceSchema);
